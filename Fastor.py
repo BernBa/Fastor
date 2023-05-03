@@ -20,18 +20,21 @@ for manuscript in range(number_of_manuscripts):
 
 # Establish a dictionary containing "Abbreviation of the manuscript" and a dataframe for each manuscript
 d = {}
+
 for ms in ms_list:
     inputfile = ms + '.csv'
     d[ms] = pd.read_csv(inputfile)
-    d[ms]['Gloss'] = d[ms]['Gloss'].replace({'á': 'a','é': 'e','í': 'i','ó': 'o','ú': 'u', r'[^\w\s]+': '', ' ': ''}, regex=True) #maybe include ' ': 'w'
-    d[ms]['Gloss'] =  d[ms]['Gloss'].apply(unidecode)
     d[ms] = d[ms].sort_values('ID')
+    d[ms]['Gloss'] = d[ms]['Gloss'].replace({'á': 'a','é': 'e','í': 'i','ó': 'o','ú': 'u', r'[^\w\s]+': '', ' ': ''}, regex=True) #maybe include ' ': 'w'
+    d[ms]['Gloss'] = d[ms]['Gloss'].apply(unidecode)
+    d[ms] = d[ms].sort_values('ID')
+    
 
 # Establishing and printing the output in the FASTA format
 for key in d:
     ms = key
     text = d[key]['Gloss'].tolist()
-    # text = 'w'.join([str(a) for a in text]) # glosses are divided by 'W' because it does not occur otherwise
+    text = ''.join([str(a) for a in text]) # glosses are divided by 'W' because it does not occur otherwise
     tw = TextWrapper()
     tw.width = 80
     text = ('\n'.join(tw.wrap(text)))
